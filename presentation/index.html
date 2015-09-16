@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Inventory?: We can Google that!</title>
+
+		<meta name="description" content="IUG presentation discussing how the University of Dayton libraries have fully utilized the increasing abilities contained in Google Sheets to augment bar-code scanning inventory.">
+		<meta name="author" content="Craig Boman and Ray Voelker ">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+		
+	</head>
+
+	<body>
+		<img alt="University of Dayton" style="
+		border:0;
+		background:rgba(255,255,255,0.6);
+		padding: 5px 5px 5px 5px;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		z-index:1000;
+		width: 150px
+		" src="./img/ud_word_mark.svg">
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+			
+			
+				<!-- section -->
+				<!-- SLIDE 0 -->
+				<section data-background = "./img/sfwa.jpg">
+					<div style="background-color:rgba(255,255,255,.7)">
+					<h1 style="
+						color:black;
+						text-shadow: 1px 1px 10px grey;
+					">Inventory?:</h1>
+					<h2 style="
+						color:black;
+						text-shadow: 1px 1px 10px grey;"
+					>We Can Google That!</h2>
+					<h3 style="
+						color:black;
+						text-shadow: 1px 1px 10px grey;
+					">Utilizing the abilities of Google Sheets <br />
+					to augment bar-code scanning <br />
+					in conducting an inventory.
+					</h3>
+					<p>
+						<small style="
+						color:black;
+						text-shadow: 1px 1px 10px grey;
+						">Craig Boman and Ray Voelker<br />
+						University of Dayton Libraries
+						</small>
+					</p>
+					</div>			
+					<aside class="notes">
+					
+						“Welcome to the Ohio Polaris Users Group and Eastern Great Lakes Innovative Users Group!
+						...
+						”
+					</aside>
+				
+				</section>	
+				<!-- /SLIDE 0 -->
+				<!-- /section -->
+				
+				
+				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+				<section data-background="rgba(242,106,43,1.0)" style="color:white">
+					<h3>Google Apps Scripting with Google Sheets</h3>
+					
+					<img style="border:0; padding:15px 15px 15px 15px" src="./img/google_drive.png">
+					<img style="border:0; padding:15px 15px 15px 15px" src="./img/sheets.png">
+					
+					
+					<aside class="notes">
+						"I want to discuss a little bit about how the script works. Without going into great detail, I'm going to outline the process by which we were able to hook google sheets up to our Sierra catalog database."
+					</aside>
+				</section>
+				<!-- /SECTION -->
+				<!-- RAY SLIDE -->
+
+				
+				<!-- SECTION -->
+				<section data-background="./img/move_data.gif">
+						<h3 style="
+							color:white;
+							text-shadow: 1px 1px 10px black;
+						">
+							How do we get data out of Sierra <br />
+							and into Google Sheets <br />
+							easily, quickly, and accurately?
+						</h3>
+						<!--<img src="./img/move_data.gif"> -->
+				</section>
+				<!-- /SECTION -->
+				
+				
+				<section>
+					<h3>A Do-It-Yourself API + Google Apps Script!</h3>
+					<div class="fragment">
+					<h3 class="rainbow">SHAMELESS PLUG!!!</h3>
+					<p>
+						See Ray’s presentation later, <i>DIY APIs</i> for more on this topic!
+					</p>
+					</div>
+				</section>
+				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+				<section>
+					<h3>What is a Do-it-yourself API?</h3>
+						<ul>
+							<li class="fragment">RESTful API
+								<ul>
+									<li class="fragment">Sierra SQL</li>
+									<li class="fragment">PHP Script + JSON Data output</li>
+								</ul>
+							</li>
+						</ul>
+				</section>				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+
+				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+				<section>
+					<h3>What is Google Apps Script?</h3>
+					<ul>
+						<li class="fragment">Cloud based scripting language ... based on JavaScript (source: https://en.wikipedia.org/wiki/Google_Apps_Script)
+						
+						<li class="fragment">
+							Google Apps API call (of our custom API) on each update of a cell in Google Sheets
+						</li>
+					</ul>
+				</section>
+				
+				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+				<section>
+					<h3>A Do-It-Yourself API + Google Apps Script <br />
+						In Action
+					</h3>
+					<video class="fragment" data-autoplay controls loop muted> 
+						<source data-src="./img/scanning.mp4" type="video/mp4">
+					</video>
+				</section>
+				<!-- /SECTION -->
+				<!-- /RAY SLIDE -->
+				
+				
+				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+				<section>
+					<h3>Some Other Useful Custom Scripts For Google Sheets</h3>
+					<ul style="">
+						<li class="fragment">Fix Missing Column Data</li>
+						<li class="fragment">Reports
+							<ul>
+								<li class="fragment">Produce "Reshelve" Sheet</li>
+								<li class="fragment">Check Sort Order</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<!-- /SECTION -->
+				<!-- /RAY SLIDE -->
+
+				
+				
+				<!-- RAY SLIDE -->
+				<!-- SECTION -->
+				<section>
+					<section data-transition-speed="fast" data-transition="fade-in">
+						<h3>Produce "Reshelve" Sheet</h3>
+					</section>
+					
+					<section data-transition-speed="fast" data-transition="fade-in">
+						<h3>Produce "Reshelve" Sheet (cont'd)</h3>
+						<p>LEFT (OUTER) JOIN on Sierra Data ("<span style="color:#CC9393">shelflist</span>") and the Items Scanned ("<span style="color:#CC9393">inventory</span>") = "<span style="color:#CC9393">reshelve</span>"</p>
+						<img style="border:0;" class="fragment" data-src="./img/left_join_before.png">
+					</section>
+					
+					<section data-transition-speed="fast" data-transition="fade-in">
+						<h3>Produce "Reshelve" Sheet (cont'd)</h3>
+						<p>LEFT (OUTER) JOIN on Sierra Data ("<span style="color:#CC9393">shelflist</span>") and the Items Scanned ("<span style="color:#CC9393">inventory</span>") = "<span style="color:#CC9393">reshelve</span>"</p>
+						<img style="border:0;" data-src="./img/left_join.png">
+					</section>
+					
+				</section>
+				<!-- /SECTION -->
+				<!-- /RAY SLIDE -->
+				
+				
+
+				<section>
+					<h3>Google Apps Scripts / SQL / PHP based RESTful API</h3> 
+				
+				
+				</section>
+
+				
+				
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+		
+		<!-- to make rainbow text! ( http://xoxco.com/projects/code/rainbow/ ) -->
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/rainbow.js"></script>
+
+		<script>
+			$(document).ready(function(){
+				$('.rainbow').rainbow({ 
+					colors: [
+						'#FF0000',
+						'#f26522',
+						'#fff200',
+						'#00a651',
+						'#28abe2',
+						'#2e3192',
+						'#6868ff'
+					],
+					animate: true,
+					animateInterval: 200,
+					pad: false,
+					pauseLength: 200,
+				});
+			});
+		</script>
+
+	</body>
+</html>
