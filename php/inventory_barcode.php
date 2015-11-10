@@ -1,4 +1,63 @@
 <?php
+
+function left_pad_number($number, $pad_amount) {
+	//returns a string value of a number padded out to the maximum length of the $pad_amount
+	
+	//if the length of the number is the same or greater than the pad_amount, just return the number unpadded
+	if ( strlen($number) >= $pad_amount ) {
+		return $number;
+	}
+	
+	$result = array();
+	$number = array_map('intval', str_split($number));	
+	
+	//pop off values from the end of number and push them onto the $result stack
+	while ($number) {
+		array_push($result, array_pop($number) );
+	}
+		
+	while ( count($result) < $pad_amount ) {
+		array_push($result, " ");
+	}
+	
+	$result = array_reverse($result);
+	$string = implode('', $result);
+
+	return $string;
+}
+
+function normalize_volume($string_data) {
+	//will return a string formatted to sort properly among other volumes
+	// For example:
+	// given a volume number:
+	// "v.1"
+	// will return:
+	// "v.    1"
+	
+	// given a volume number:
+	// "v.11"
+	// will return:
+	// "v.   11"
+	
+	$return_string = "";
+	$len = strlen($string_data);
+	
+	//split everything that is a number, and everything that is not a number into $matches
+	$regex = "/[0-9]+|[^0-9]+/";
+	preg_match_all($regex, $string_data, $matches);
+		
+	for($i=0; $i<count($matches[0]); $i++) {
+		if ( is_numeric ($matches[0][$i]) ) {
+			$matches[0][$i] = left_pad_number($matches[0][$i], 5);
+		}
+	}
+	
+	$string = implode('', $matches[0]);
+	
+	return $string;	
+} //end function normalize_callnumber
+
+
 // sanitize the input
 if ( isset($_GET['barcode']) )  {
 	header("Content-Type: application/json");
@@ -61,7 +120,8 @@ $sql = '
 SELECT
 
 -- p.call_number_norm,
-upper(p.call_number_norm || COALESCE(\' \' || v.field_content, \'\') ) as call_number_norm,
+upper(p.call_number_norm) as call_number_norm,
+v.field_content as volume,
 i.location_code, i.item_status_code,
 b.best_title,
 c.due_gmt, i.inventory_gmt
@@ -109,6 +169,13 @@ e.index_tag || e.index_entry = \'b\' || LOWER(\'' . $barcode . '\')
 $statement = $connection->prepare($sql);
 $statement->execute();
 $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+if($row["volume"]) {
+	$row["call_number_norm"] = $row["call_number_norm"] . 
+		" " . 
+		normalize_volume($row["volume"]);
+}
+
 header('Content-Type: application/json');
 echo json_encode($row);
 
