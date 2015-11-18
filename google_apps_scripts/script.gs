@@ -86,7 +86,7 @@ function fixMissing() {
           values[i][5] = '=\"' + json_data.due_gmt.substring(0, json_data.due_gmt.length - 3) + '\"';
         }
         
-        values[i][6] = '=\"' + Utilities.formatDate(new Date(), "GMT-4:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"';
+        values[i][6] = '=\"' + Utilities.formatDate(new Date(), "GMT-5:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"';
         values[i][7] = i+1;
         values[i][8] = spread_sheet_name;
         
@@ -152,7 +152,7 @@ function onEdit(e) {
       e.range.offset(0,5).setValue('=\"\"');
     }
     
-    e.range.offset(0,6).setValue('=\"' + Utilities.formatDate(new Date(), "GMT-4:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"');
+    e.range.offset(0,6).setValue('=\"' + Utilities.formatDate(new Date(), "GMT-5:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"');
     e.range.offset(0,7).setValue(e.range.getRow());
     e.range.offset(0,8).setValue(spread_sheet_name);
     
