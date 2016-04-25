@@ -5,7 +5,9 @@
   </head>
   <body>
    
+   <pre>
    <div id="output">Loading ...</div>
+   </pre>
    
    <!-- don't clutter the screen with a close button unless we really need it (we don't)
    <div><input type="button" value="Close" onclick="google.script.host.close()" /></div>
