@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+   
+   <div id="output">Loading ...</div>
+   
+   <!-- don't clutter the screen with a close button unless we really need it (we don't)
+   <div><input type="button" value="Close" onclick="google.script.host.close()" /></div>
+   -->
+   
+   <script>
+   function onSuccess(json_data) {
+   // The code in this function runs when the page is loaded.
+   var output = document.getElementById('output');
+   output.innerHTML = '';
+   output.innerHTML += JSON.stringify(json_data);
+   }
+   
+   // run the get_json_data function after success
+   google.script.run.withSuccessHandler(onSuccess).get_json_data();
+   
+   </script>
+   </body>
+    
+</html>
