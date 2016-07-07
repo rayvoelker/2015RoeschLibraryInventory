@@ -61,7 +61,7 @@ function fixMissing() {
       
       //simulate a trigger of the onEdit function ...
       /* */
-      var url = 'http://library2.udayton.edu/api/item_barcode.php?'
+      var url = 'http://library2.udayton.edu/api/inventory/item_barcode.php?'
       + 'barcode=' + value;
       var result = UrlFetchApp.fetch(url);  
       var json_data = JSON.parse(result.getContentText());
@@ -138,7 +138,7 @@ function onEdit(e) {
         spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
     e.range.setValue(value.toLowerCase());
 
-    var url = 'http://library2.udayton.edu/api/item_barcode.php?'
+    var url = 'http://library2.udayton.edu/api/inventory/item_barcode.php?'
       + 'barcode=' + value;
     var result = UrlFetchApp.fetch(url);  
     var json_data = JSON.parse(result.getContentText());
