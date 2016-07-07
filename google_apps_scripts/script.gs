@@ -1,7 +1,7 @@
 // Roesch Library Inventory Project - Google Spreadsheets Script
 // 	version 1.6
 //	Ray Voelker
-//	July 10, 2015
+//	July 07, 2016
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var menuEntries = [];
