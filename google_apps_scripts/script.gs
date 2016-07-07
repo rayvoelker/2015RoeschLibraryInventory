@@ -1,5 +1,5 @@
 // Roesch Library Inventory Project - Google Spreadsheets Script
-// 	version 1.5
+// 	version 1.6
 //	Ray Voelker
 //	July 10, 2015
 function onOpen() {
@@ -13,7 +13,7 @@ function onOpen() {
   menuEntries.push(null); // line separator
   menuEntries.push({name: "Fix Missing Column Data", functionName: "fixMissing"});
   menuEntries.push(null); // line separator
-  menuEntries.push({name: "version 1.5", functionName: "version"});
+  menuEntries.push({name: "version 1.6", functionName: "version"});
 
   spreadsheet.addMenu("Inventory", menuEntries);
 } //end function onOpen()
@@ -22,22 +22,23 @@ function onOpen() {
 function version() {
   var id = SpreadsheetApp.getActiveSpreadsheet().getId();
   SpreadsheetApp.getUi()
-  .alert('version 1.5 \nid:\n' + id);  
+  .alert('version 1.6 \nid:\n' + id);  
 }
 
 
 function resizeInventory() {
   sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
   
-  sheet.setColumnWidth(1, 75);
-  sheet.setColumnWidth(2, 225);
-  sheet.setColumnWidth(3, 200);
-  sheet.setColumnWidth(4, 50);
-  sheet.setColumnWidth(5, 25);
-  sheet.setColumnWidth(6, 50);
-  sheet.setColumnWidth(7, 125);
-  sheet.setColumnWidth(8, 50);
-  sheet.setColumnWidth(9, 125);  
+  sheet.setColumnWidth(1, 75); 		//barcode
+  sheet.setColumnWidth(2, 225); 	//call_number_norm
+  sheet.setColumnWidth(3, 200); 	//best_title
+  sheet.setColumnWidth(4, 50); 		//location_code
+  sheet.setColumnWidth(5, 25);		//item_status_code
+  sheet.setColumnWidth(6, 50);		//due_gmt
+  sheet.setColumnWidth(7, 125);		//scan date
+  sheet.setColumnWidth(8, 50);		//row name
+  sheet.setColumnWidth(9, 125);		//sheet name 
+  
 }
 
 //fixMissing will attempt to fix the missing values from columns.
@@ -47,7 +48,8 @@ function fixMissing() {
   //find all the items that may not have been filled in correctly.
   //get the row number of the last row
   var lastRow = sheet.getLastRow();
-  var range = SpreadsheetApp.getActiveSheet().getRange(1, 1, lastRow, 9);
+  //get the range and 15 columns over just to make sure we have enough
+  var range = SpreadsheetApp.getActiveSheet().getRange(1, 1, lastRow, 15);
   var count = 0;
   
   //Logger.log(range.getValues().length); 
@@ -89,6 +91,15 @@ function fixMissing() {
         values[i][6] = '=\"' + Utilities.formatDate(new Date(), "GMT-5:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"';
         values[i][7] = i+1;
         values[i][8] = spread_sheet_name;
+        
+        //these are the extra fields added in version 1.6 (added to the end of the sheet)
+		if (json_data.best_author) {
+			e.range.offset(0,9).setValue('=\"' + json_data.best_author + '\"');
+		}
+
+		if (json_data.bib_record_num) {
+			e.range.offset(0,10).setValue('=\"' + json_data.bib_record_num + '\"');
+		}
         
       } //end if
       /* */
@@ -156,6 +167,15 @@ function onEdit(e) {
     e.range.offset(0,7).setValue(e.range.getRow());
     e.range.offset(0,8).setValue(spread_sheet_name);
     
+    //these are the extra fields added in version 1.6 (added to the end of the sheet)
+    if (json_data.best_author) {
+		e.range.offset(0,9).setValue('=\"' + json_data.best_author + '\"');
+	}
+	
+	if (json_data.bib_record_num) {
+		e.range.offset(0,10).setValue('=\"' + json_data.bib_record_num + '\"');
+	}
+	    
   } //end if
 } //end function onEdit()
 
