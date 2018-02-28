@@ -86,7 +86,6 @@ arguments as the example below illustrates :
 		. "dbname=iii;"
 		. "port=1032;"
 		. "sslmode=require;"
-		. "charset=utf8;"
 */
 
 //reset all variables needed for our connection
