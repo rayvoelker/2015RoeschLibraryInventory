@@ -95,6 +95,7 @@ $password = null;
 $dsn = null;
 $connection = null;
 
+//includes the file in which you've stored your database credentials; should be in php format in this case
 require_once($_SERVER['DOCUMENT_ROOT'] . '/../includes/sql/sqlinv_group.php');
 
 //make our database connection
