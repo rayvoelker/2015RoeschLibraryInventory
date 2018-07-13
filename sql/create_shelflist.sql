@@ -41,11 +41,12 @@ ON
   b.bib_record_id = l.bib_record_id
 
 WHERE 
-i.location_code = 'imr'
+i.location_code = 'imp'
+/*AND 
+p.call_number_norm >= lower('') 
 AND 
-p.call_number_norm >= lower('BL  312 R45 2010') 
-AND 
-p.call_number_norm <= lower('Z  1039 G55 I83 2016')
+p.call_number_norm <= lower('GV 1507 W8 B35 2014')
+*/
 
 -- since we have the situation where multiple bibs can share the same item record, we should remove duplicated items.
 -- we need to tweak this ... not sure grouping is the best way to do this.
@@ -59,6 +60,7 @@ p.call_number_norm <= lower('Z  1039 G55 I83 2016')
 -- i.location_code, i.item_status_code
 
 order by 
+--b.best_title ASC, --for periodicals which are sorted by title
 p.call_number_norm ASC,
 l.items_display_order ASC
 
