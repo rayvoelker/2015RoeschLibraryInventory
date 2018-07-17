@@ -5,8 +5,8 @@ upper(p.call_number_norm || COALESCE(' ' || v.field_content, '') ) as call_numbe
 b.best_title,
 i.location_code, 
 i.item_status_code,
-s.content AS inventory_note, to_date(c.due_gmt::text, 
-'YYYY-MM-DD HH:MI:SS') as due_gmt
+s.content AS inventory_note, 
+to_timestamp(c.due_gmt::text, 'YYYY-MM-DD HH24:MI:SS') as due_gmt --some dates may require 24 hour time stamp; idk
 
 FROM 
 sierra_view.item_record_property	AS p 
@@ -41,11 +41,12 @@ ON
   b.bib_record_id = l.bib_record_id
 
 WHERE 
-i.location_code = 'imp'
-/*AND 
-p.call_number_norm >= lower('') 
+i.location_code = 'imrs'
+ /* --comment out this section for items organized by title
 AND 
-p.call_number_norm <= lower('GV 1507 W8 B35 2014')
+p.call_number_norm >= lower('NC  993 E32 E4413 2006') 
+AND 
+p.call_number_norm <= lower('PC 2065 G52 1990')
 */
 
 -- since we have the situation where multiple bibs can share the same item record, we should remove duplicated items.
@@ -64,4 +65,4 @@ order by
 p.call_number_norm ASC,
 l.items_display_order ASC
 
-LIMIT 10000
+--LIMIT 10000
