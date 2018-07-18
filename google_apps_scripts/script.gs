@@ -1,7 +1,10 @@
-// Roesch Library Inventory Project - Google Spreadsheets Script
+// Miami University Inventory Project - Google Spreadsheets Script
 // 	version 1.6
-//	Ray Voelker
+//	Originally by Ray Voelker with help by Craig Boman
 //	July 07, 2016
+//	some scripts commented out
+//	to use scripts, paste into script editor fo a Google sheet and refresh sheet webpage
+
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var menuEntries = [];
@@ -61,7 +64,7 @@ function fixMissing() {
       
       //simulate a trigger of the onEdit function ...
       /* */
-      var url = 'http://library2.udayton.edu/api/inventory/item_barcode.php?'
+      var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/cataloging/barcode.php?'
       + 'barcode=' + value;
       var result = UrlFetchApp.fetch(url);  
       var json_data = JSON.parse(result.getContentText());
@@ -69,9 +72,10 @@ function fixMissing() {
       //make sure we have data back ...
       if(json_data) {
         count++;
-        if (value) {
+        
+        /*if (value) {
           values[i][0] = value.toLowerCase();
-        }
+        }*/
         
         if (json_data.call_number_norm) {
           values[i][1] = '=\"' + json_data.call_number_norm.toUpperCase() + '\"';
@@ -92,6 +96,7 @@ function fixMissing() {
         values[i][7] = i+1;
         values[i][8] = spread_sheet_name;
         
+        /*
         //these are the extra fields added in version 1.6 (added to the end of the sheet)
 		if (json_data.best_author) {
 			e.range.offset(0,9).setValue('=\"' + json_data.best_author + '\"');
@@ -99,7 +104,7 @@ function fixMissing() {
 
 		if (json_data.bib_record_num) {
 			e.range.offset(0,10).setValue('=\"' + json_data.bib_record_num + '\"');
-		}
+		}*/
         
       } //end if
       /* */
@@ -138,7 +143,7 @@ function onEdit(e) {
         spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
     e.range.setValue(value.toLowerCase());
 
-    var url = 'http://library2.udayton.edu/api/inventory/item_barcode.php?'
+    var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/cataloging/barcode.php?'
       + 'barcode=' + value;
     var result = UrlFetchApp.fetch(url);  
     var json_data = JSON.parse(result.getContentText());
@@ -168,13 +173,14 @@ function onEdit(e) {
     e.range.offset(0,8).setValue(spread_sheet_name);
     
     //these are the extra fields added in version 1.6 (added to the end of the sheet)
-    if (json_data.best_author) {
+    
+    /*if (json_data.best_author) {
 		e.range.offset(0,9).setValue('=\"' + json_data.best_author + '\"');
 	}
 	
 	if (json_data.bib_record_num) {
 		e.range.offset(0,10).setValue('=\"' + json_data.bib_record_num + '\"');
-	}
+	}*/
 	    
   } //end if
 } //end function onEdit()
@@ -315,3 +321,4 @@ function checkSort() {
   sheet.autoResizeColumn(6);
   
 } //end function CheckSort()
+
