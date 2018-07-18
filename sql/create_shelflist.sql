@@ -41,13 +41,13 @@ ON
   b.bib_record_id = l.bib_record_id
 
 WHERE 
-i.location_code = 'imrs'
- /* --comment out this section for items organized by title
-AND 
-p.call_number_norm >= lower('NC  993 E32 E4413 2006') 
-AND 
-p.call_number_norm <= lower('PC 2065 G52 1990')
-*/
+i.location_code = 'imcur'
+--   --comment out this section for items organized by title
+-- AND 
+-- p.call_number_norm >= lower('BF   77 U53 1992 SE') 
+-- AND 
+-- p.call_number_norm <= lower('TX  335 L69 1990 TR BOOK')
+
 
 -- since we have the situation where multiple bibs can share the same item record, we should remove duplicated items.
 -- we need to tweak this ... not sure grouping is the best way to do this.
