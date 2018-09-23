@@ -1,7 +1,8 @@
-// Roesch Library Inventory Project - Google Spreadsheets Script
-// 	version 1.5
-//	University of Dayton (Ray Voelker)
-//	July 10, 2015
+// Miami University library inventory
+// 	version 1.6
+//  with collaboration
+//	Ray Voelker
+//	Sept 23, 2018
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var menuEntries = [];
