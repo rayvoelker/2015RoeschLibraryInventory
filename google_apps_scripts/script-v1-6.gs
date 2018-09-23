@@ -1,3 +1,46 @@
+// Roesch Library Inventory Project - Google Spreadsheets Script
+// 	version 1.5
+//	University of Dayton (Ray Voelker)
+//	July 10, 2015
+function onOpen() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var menuEntries = [];
+  
+  menuEntries.push({name: "Generate Shelflist", functionName: "batchShelf"});
+  menuEntries.push({name: "Produce Reshelve Sheet", functionName: "runReshelve"});
+  menuEntries.push({name: "Check Sort Order", functionName: "checkSort"}); 
+  menuEntries.push(null); // line separator
+  menuEntries.push({name: "Resize Inventory Sheet Columns", functionName: "resizeInventory"});
+  menuEntries.push(null); // line separator
+  menuEntries.push({name: "Fix Missing Column Data", functionName: "fixMissing"});
+  menuEntries.push(null); // line separator
+  menuEntries.push({name: "version 1.5", functionName: "version"});
+
+  spreadsheet.addMenu("Inventory", menuEntries);
+} //end function onOpen()
+
+
+function version() {
+  var id = SpreadsheetApp.getActiveSpreadsheet().getId();
+  SpreadsheetApp.getUi()
+  .alert('version 1.5 \nid:\n' + id);  
+}
+
+
+function resizeInventory() {
+  sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
+  
+  sheet.setColumnWidth(1, 75);
+  sheet.setColumnWidth(2, 225);
+  sheet.setColumnWidth(3, 200);
+  sheet.setColumnWidth(4, 50);
+  sheet.setColumnWidth(5, 25);
+  sheet.setColumnWidth(6, 50);
+  sheet.setColumnWidth(7, 125);
+  sheet.setColumnWidth(8, 50);
+  sheet.setColumnWidth(9, 125);  
+}
+
 function batchShelf() {
   var spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
@@ -54,61 +97,17 @@ function batchShelf() {
   var payload = JSON.stringify(json_data); //string representation?
   Logger.log(json_data);
   
-  var shelflist = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('shelflist');
+  var shelflist = SpreadsheetApp.getActive().insertSheet('shelflist', SpreadsheetApp.getActive().getSheets().length);
+  
+  //var shelflist = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('shelflist');
   shelflist.getRange(1,1,json_data.length,7).setValues(json_data);
-  
- 
-  
-  
+    
   //try to automatically create spreadsheet named shelflist
   
   
   
 }//end function batchShelf
 
-
-// Roesch Library Inventory Project - Google Spreadsheets Script
-// 	version 1.5
-//	University of Dayton (Ray Voelker)
-//	July 10, 2015
-function onOpen() {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var menuEntries = [];
-  
-  menuEntries.push({name: "Generate Shelflist", functionName: "batchShelf"});
-  menuEntries.push({name: "Produce Reshelve Sheet", functionName: "runReshelve"});
-  menuEntries.push({name: "Check Sort Order", functionName: "checkSort"}); 
-  menuEntries.push(null); // line separator
-  menuEntries.push({name: "Resize Inventory Sheet Columns", functionName: "resizeInventory"});
-  menuEntries.push(null); // line separator
-  menuEntries.push({name: "Fix Missing Column Data", functionName: "fixMissing"});
-  menuEntries.push(null); // line separator
-  menuEntries.push({name: "version 1.5", functionName: "version"});
-
-  spreadsheet.addMenu("Inventory", menuEntries);
-} //end function onOpen()
-
-
-function version() {
-  var id = SpreadsheetApp.getActiveSpreadsheet().getId();
-  SpreadsheetApp.getUi()
-  .alert('version 1.5 \nid:\n' + id);  
-}
-
-
-function resizeInventory() {
-  sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
-  
-  sheet.setColumnWidth(1, 75);
-  sheet.setColumnWidth(2, 225);
-  sheet.setColumnWidth(3, 200);
-  sheet.setColumnWidth(4, 50);
-  sheet.setColumnWidth(5, 25);
-  sheet.setColumnWidth(6, 50);
-  sheet.setColumnWidth(7, 125);
-  sheet.setColumnWidth(8, 50);
-  sheet.setColumnWidth(9, 125);  
-}
 
 //fixMissing will attempt to fix the missing values from columns.
 function fixMissing() {
