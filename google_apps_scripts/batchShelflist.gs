@@ -1,17 +1,3 @@
-//scripts are for integrating with collection development weeding reports
-
-
-function onOpen() {
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var menuEntries = [];
-  
-  menuEntries.push({name: "Generate Weeding List", functionName: "batchShelf"});
-  menuEntries.push({name: "Update Locations", functionName: "runLocations"});
-
-  spreadsheet.addMenu("Weeding", menuEntries);
-} //end function onOpen()
-
-
 
 function batchShelf() {
 //  var start = 'AY   67 N5 W7  2005';
@@ -61,18 +47,3 @@ function batchShelf() {
 
 }//end function batchShelf
 
-
-function runLocations() {
-  var locations = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/collection/locations.php';
-  
-  url = encodeURI(locations)
-  var result = UrlFetchApp.fetch(url);
-  var json_data = JSON.parse(result.getContentText());
-  var payload = JSON.stringify(json_data); //string representation?
-  
-  Logger.log(json_data);  
-  
-  
-  
-  
-}//end runLocations
