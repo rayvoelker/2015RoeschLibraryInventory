@@ -2,9 +2,9 @@
 -- i.inventory_gmt,
 lower(p.barcode) as barcode,
 upper(p.call_number_norm || COALESCE(' ' || v.field_content, '') ) as call_number_norm,
-b.best_title AS best_title,
-i.location_code AS location,
-i.item_status_code AS status,
+b.best_title,
+i.location_code,
+i.item_status_code,
 s.content AS inventory_note,
 to_timestamp(c.due_gmt::text, 'YYYY-MM-DD HH24:MI:SS') as due_gmt --some dates may require 24 hour time stamp; idk
 
@@ -42,11 +42,11 @@ ON
 
 WHERE
 i.location_code = 'imje'
---   --comment out this section for items organized by title
--- AND
--- p.call_number_norm >= lower('BF   77 U53 1992 SE')
--- AND
--- p.call_number_norm <= lower('TX  335 L69 1990 TR BOOK')
+  --comment out this section for items organized by title
+AND
+p.call_number_norm >= lower('BF   77 U53 1992 SE')
+AND
+p.call_number_norm <= lower('TX  335 L69 1990 TR BOOK')
 
 
 -- since we have the situation where multiple bibs can share the same item record, we should remove duplicated items.
