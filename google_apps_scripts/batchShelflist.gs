@@ -21,7 +21,7 @@ function batchShelf() {
   //continue by calling api call to the Sierra api based on location and call number range
   //logged above in logger values
 
-  var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/collection/floyd.php?'
+  var url = 'http://lib.catalog.edu/~bomanca/collection/floyd.php?'
   + 'location=' + location + '&' + 'start=' + start + '&' + 'end=' + end;
   url = encodeURI(url)
   Logger.log(url);
