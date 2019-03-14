@@ -1,13 +1,11 @@
-// Miami University library inventory
-// 	version 1.6
-//  with collaboration
-//	Ray Voelker
-//	Sept 23, 2018
+// Roesch Library Inventory Project - Google Spreadsheets Script
+// 	version 1.5
+//	University of Dayton (Ray Voelker)
+//	July 10, 2015
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var menuEntries = [];
   
-  menuEntries.push({name: "Generate Shelflist", functionName: "batchShelf"});
   menuEntries.push({name: "Produce Reshelve Sheet", functionName: "runReshelve"});
   menuEntries.push({name: "Check Sort Order", functionName: "checkSort"}); 
   menuEntries.push(null); // line separator
@@ -41,74 +39,6 @@ function resizeInventory() {
   sheet.setColumnWidth(8, 50);
   sheet.setColumnWidth(9, 125);  
 }
-
-function batchShelf() {
-  var spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
-  //find all the items that may not have been filled in correctly.
-  //get the row number of the last row
-  
-  var first = sheet.getRange(1,2).getValues();
-  var start = first[0];
-  Logger.log(first[0]);
-  
-  
-  var lastRow = sheet.getLastRow();
-  
-  var last = sheet.getRange(lastRow,2).getValues();
-  var end = last[0];
-  Logger.log(last[0]);
-    
-  var range = sheet.getSheetValues(1,4,lastRow,1);
-  //Logger.log(range[3]);
- 
-  
-  //count the most frequent location ; https://medium.com/@AmJustSam/how-to-find-most-frequent-item-of-an-array-12015df68c65
-  var counts = {};
-  var compare = 0;
-  var mostFrequent;
-  (function(array){
-    for(var i = 0, len = array.length; i < len; i++){
-      var word = array[i];
-      
-      if(counts[word] === undefined){
-        counts[word] = 1;
-      }else{
-        counts[word] = counts[word] + 1;
-      }
-      if(counts[word] > compare){
-        compare = counts[word];
-        location = range[i];
-      }
-    }
-    Logger.log(location);
-  })(range);
-  //end of count most frequenct location 
-  
-  //continue by calling api call to the Sierra api based on location and call number range
-  //logged above in logger values
-  
-  var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/collection/shelflist.php?'
-  + 'location=' + location + '&' + 'start=' + start + '&' + 'end=' + end;
-  url = encodeURI(url)
-  Logger.log(url);
-  
-  var result = UrlFetchApp.fetch(url);  
-  var json_data = JSON.parse(result.getContentText());
-  var payload = JSON.stringify(json_data); //string representation?
-  Logger.log(json_data);
-  
-  var shelflist = SpreadsheetApp.getActive().insertSheet('shelflist', SpreadsheetApp.getActive().getSheets().length);
-  
-  //var shelflist = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('shelflist');
-  shelflist.getRange(1,1,json_data.length,7).setValues(json_data);
-    
-  //try to automatically create spreadsheet named shelflist
-  
-  
-  
-}//end function batchShelf
-
 
 //fixMissing will attempt to fix the missing values from columns.
 function fixMissing() {
@@ -195,7 +125,7 @@ function onEdit(e) {
     //Logger.log( e.range.getValue() );
     var value = e.range.getValue(),
         spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
-    
+    e.range.setValue(value.toLowerCase());
 
     var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/cataloging/barcode.php?'
       + 'barcode=' + value;
@@ -361,3 +291,5 @@ function checkSort() {
   sheet.autoResizeColumn(6);
   
 } //end function CheckSort()
+
+
