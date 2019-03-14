@@ -1,14 +1,13 @@
-// Miami University Inventory Project - Google Spreadsheets Script
+// Miami University library inventory
 // 	version 1.6
-//	Originally by Ray Voelker with help by Craig Boman
-//	July 07, 2016
-//	some scripts commented out
-//	to use scripts, paste into script editor fo a Google sheet and refresh sheet webpage
-
+//  with collaboration
+//	Ray Voelker
+//	Sept 23, 2018
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var menuEntries = [];
   
+  menuEntries.push({name: "Generate Shelflist", functionName: "batchShelf"});
   menuEntries.push({name: "Produce Reshelve Sheet", functionName: "runReshelve"});
   menuEntries.push({name: "Check Sort Order", functionName: "checkSort"}); 
   menuEntries.push(null); // line separator
@@ -16,7 +15,7 @@ function onOpen() {
   menuEntries.push(null); // line separator
   menuEntries.push({name: "Fix Missing Column Data", functionName: "fixMissing"});
   menuEntries.push(null); // line separator
-  menuEntries.push({name: "version 1.6", functionName: "version"});
+  menuEntries.push({name: "version 1.5", functionName: "version"});
 
   spreadsheet.addMenu("Inventory", menuEntries);
 } //end function onOpen()
@@ -25,24 +24,91 @@ function onOpen() {
 function version() {
   var id = SpreadsheetApp.getActiveSpreadsheet().getId();
   SpreadsheetApp.getUi()
-  .alert('version 1.6 \nid:\n' + id);  
+  .alert('version 1.5 \nid:\n' + id);  
 }
 
 
 function resizeInventory() {
   sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
   
-  sheet.setColumnWidth(1, 75); 		//barcode
-  sheet.setColumnWidth(2, 225); 	//call_number_norm
-  sheet.setColumnWidth(3, 200); 	//best_title
-  sheet.setColumnWidth(4, 50); 		//location_code
-  sheet.setColumnWidth(5, 25);		//item_status_code
-  sheet.setColumnWidth(6, 50);		//due_gmt
-  sheet.setColumnWidth(7, 125);		//scan date
-  sheet.setColumnWidth(8, 50);		//row name
-  sheet.setColumnWidth(9, 125);		//sheet name 
-  
+  sheet.setColumnWidth(1, 75);
+  sheet.setColumnWidth(2, 225);
+  sheet.setColumnWidth(3, 200);
+  sheet.setColumnWidth(4, 50);
+  sheet.setColumnWidth(5, 25);
+  sheet.setColumnWidth(6, 50);
+  sheet.setColumnWidth(7, 125);
+  sheet.setColumnWidth(8, 50);
+  sheet.setColumnWidth(9, 125);  
 }
+
+function batchShelf() {
+  var spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('inventory');
+  //find all the items that may not have been filled in correctly.
+  //get the row number of the last row
+  
+  var first = sheet.getRange(1,2).getValues();
+  var start = first[0];
+  Logger.log(first[0]);
+  
+  
+  var lastRow = sheet.getLastRow();
+  
+  var last = sheet.getRange(lastRow,2).getValues();
+  var end = last[0];
+  Logger.log(last[0]);
+    
+  var range = sheet.getSheetValues(1,4,lastRow,1);
+  //Logger.log(range[3]);
+ 
+  
+  //count the most frequent location ; https://medium.com/@AmJustSam/how-to-find-most-frequent-item-of-an-array-12015df68c65
+  var counts = {};
+  var compare = 0;
+  var mostFrequent;
+  (function(array){
+    for(var i = 0, len = array.length; i < len; i++){
+      var word = array[i];
+      
+      if(counts[word] === undefined){
+        counts[word] = 1;
+      }else{
+        counts[word] = counts[word] + 1;
+      }
+      if(counts[word] > compare){
+        compare = counts[word];
+        location = range[i];
+      }
+    }
+    Logger.log(location);
+  })(range);
+  //end of count most frequenct location 
+  
+  //continue by calling api call to the Sierra api based on location and call number range
+  //logged above in logger values
+  
+  var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/collection/shelflist.php?'
+  + 'location=' + location + '&' + 'start=' + start + '&' + 'end=' + end;
+  url = encodeURI(url)
+  Logger.log(url);
+  
+  var result = UrlFetchApp.fetch(url);  
+  var json_data = JSON.parse(result.getContentText());
+  var payload = JSON.stringify(json_data); //string representation?
+  Logger.log(json_data);
+  
+  var shelflist = SpreadsheetApp.getActive().insertSheet('shelflist', SpreadsheetApp.getActive().getSheets().length);
+  
+  //var shelflist = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('shelflist');
+  shelflist.getRange(1,1,json_data.length,7).setValues(json_data);
+    
+  //try to automatically create spreadsheet named shelflist
+  
+  
+  
+}//end function batchShelf
+
 
 //fixMissing will attempt to fix the missing values from columns.
 function fixMissing() {
@@ -51,8 +117,7 @@ function fixMissing() {
   //find all the items that may not have been filled in correctly.
   //get the row number of the last row
   var lastRow = sheet.getLastRow();
-  //get the range and 15 columns over just to make sure we have enough
-  var range = SpreadsheetApp.getActiveSheet().getRange(1, 1, lastRow, 15);
+  var range = SpreadsheetApp.getActiveSheet().getRange(1, 1, lastRow, 9);
   var count = 0;
   
   //Logger.log(range.getValues().length); 
@@ -72,10 +137,9 @@ function fixMissing() {
       //make sure we have data back ...
       if(json_data) {
         count++;
-        
-        /*if (value) {
-          values[i][0] = value.toLowerCase();
-        }*/
+        if (value) {
+          values[i][0] = value.toString().toLowerCase();
+        }
         
         if (json_data.call_number_norm) {
           values[i][1] = '=\"' + json_data.call_number_norm.toUpperCase() + '\"';
@@ -92,19 +156,9 @@ function fixMissing() {
           values[i][5] = '=\"' + json_data.due_gmt.substring(0, json_data.due_gmt.length - 3) + '\"';
         }
         
-        values[i][6] = '=\"' + Utilities.formatDate(new Date(), "GMT-5:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"';
+        values[i][6] = '=\"' + Utilities.formatDate(new Date(), "GMT-4:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"';
         values[i][7] = i+1;
         values[i][8] = spread_sheet_name;
-        
-        /*
-        //these are the extra fields added in version 1.6 (added to the end of the sheet)
-		if (json_data.best_author) {
-			e.range.offset(0,9).setValue('=\"' + json_data.best_author + '\"');
-		}
-
-		if (json_data.bib_record_num) {
-			e.range.offset(0,10).setValue('=\"' + json_data.bib_record_num + '\"');
-		}*/
         
       } //end if
       /* */
@@ -141,7 +195,7 @@ function onEdit(e) {
     //Logger.log( e.range.getValue() );
     var value = e.range.getValue(),
         spread_sheet_name = SpreadsheetApp.getActiveSpreadsheet().getName();
-    e.range.setValue(value.toLowerCase());
+    
 
     var url = 'http://ulblwebt02.lib.miamioh.edu/~bomanca/cataloging/barcode.php?'
       + 'barcode=' + value;
@@ -168,20 +222,10 @@ function onEdit(e) {
       e.range.offset(0,5).setValue('=\"\"');
     }
     
-    e.range.offset(0,6).setValue('=\"' + Utilities.formatDate(new Date(), "GMT-5:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"');
+    e.range.offset(0,6).setValue('=\"' + Utilities.formatDate(new Date(), "GMT-4:00", "yyyy-MM-dd' 'HH:mm:ss") + '\"');
     e.range.offset(0,7).setValue(e.range.getRow());
     e.range.offset(0,8).setValue(spread_sheet_name);
     
-    //these are the extra fields added in version 1.6 (added to the end of the sheet)
-    
-    /*if (json_data.best_author) {
-		e.range.offset(0,9).setValue('=\"' + json_data.best_author + '\"');
-	}
-	
-	if (json_data.bib_record_num) {
-		e.range.offset(0,10).setValue('=\"' + json_data.bib_record_num + '\"');
-	}*/
-	    
   } //end if
 } //end function onEdit()
 
@@ -235,15 +279,11 @@ function joinShelfListToInventory() {
     }
 
     //create the spreadsheet 'reshelve', and put it at the end of the other sheets.
-    // old sheet ... 
-    //var reshelve_sheet = SpreadsheetApp.getActive().insertSheet('reshelve', SpreadsheetApp.getActive().getSheets().length);
-    
-    // insert a new sheet, add it to the last index, and make sure the new sheet has the proper amount of rows ... using shelflist_sheet as our template
-    var reshelve_sheet = SpreadsheetApp.getActive().insertSheet('reshelve', SpreadsheetApp.getActive().getSheets().length, {template: shelflist_sheet});
-    
-    /*reshelve_sheet.insertRows( Math.floor(reshelve_sheet.getMaxRows()),
+    var reshelve_sheet = SpreadsheetApp.getActive().insertSheet('reshelve', SpreadsheetApp.getActive().getSheets().length);
+       
+    //make sure the new sheet has the proper amount of rows ...
+    reshelve_sheet.insertRows( Math.floor(reshelve_sheet.getMaxRows()), 
                               shelflist.length - Math.floor(reshelve_sheet.getMaxRows()) );
-    */
     
     //start filling the reshelve sheet
     var shelflist_range = shelflist_sheet.getRange( 'A1:D' + Math.floor(shelflist_sheet.getMaxRows()) ),
@@ -321,4 +361,3 @@ function checkSort() {
   sheet.autoResizeColumn(6);
   
 } //end function CheckSort()
-
